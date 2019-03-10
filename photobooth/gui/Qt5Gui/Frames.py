@@ -834,17 +834,23 @@ class Settings(QtWidgets.QFrame):
         self.add('Printer', 'width', width)
         self.add('Printer', 'height', height)
 
+        thermal_printer = QtWidgets.QCheckBox()
+        thermal_printer.setChecked(
+            self._cfg.getBool('Printer', 'thermal_printer'))
+        self.add('Printer', 'thermal_printer', thermal_printer)
+
         lay_size = QtWidgets.QHBoxLayout()
         lay_size.addWidget(width)
         lay_size.addWidget(QtWidgets.QLabel('x'))
         lay_size.addWidget(height)
 
         layout = QtWidgets.QFormLayout()
-        layout.addRow(_('Enable printing:'), enable)
-        layout.addRow(_('Module:'), module)
-        layout.addRow(_('Print to PDF (for debugging):'), pdf)
-        layout.addRow(_('Ask for confirmation before printing:'), confirmation)
-        layout.addRow(_('Paper size [mm]:'), lay_size)
+        layout.addRow(('Enable printing:'), enable)
+        layout.addRow(('Module:'), module)
+        layout.addRow(('Print to PDF (for debugging):'), pdf)
+        layout.addRow(('Ask for confirmation before printing:'), confirmation)
+        layout.addRow(('Paper size [mm]:'), lay_size)
+        layout.addRow(('Thermal printer:'), thermal_printer)
 
         widget = QtWidgets.QWidget()
         widget.setLayout(layout)
@@ -929,7 +935,8 @@ class Settings(QtWidgets.QFrame):
         self._cfg.set('Printer', 'width', self.get('Printer', 'width').text())
         self._cfg.set('Printer', 'height',
                       self.get('Printer', 'height').text())
-
+        self._cfg.set('Printer', 'thermal_printer',
+                      str(self.get('Printer', 'thermal_printer').isChecked()))
         self._cfg.write()
         self._restartAction()
 

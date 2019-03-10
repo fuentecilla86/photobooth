@@ -52,6 +52,9 @@ class PictureList:
         """
         # Find existing files
         count_pattern = '[0-9]' * self.count_width
+        print("************")
+        print(self.basename + count_pattern + self.suffix)
+        print("************")
         pictures = glob(self.basename + count_pattern + self.suffix)
 
         # Get number of latest file
@@ -75,6 +78,13 @@ class PictureList:
     def getLast(self):
         """Return the current filename"""
         return self.getFilename(self.counter)
+
+    def getNLast(self, number):
+        """Return the current and n last filename"""
+        lastNFilenames = []
+        for n in range(number):
+            lastNFilenames.append(self.getFilename(self.counter-n))
+        return lastNFilenames
 
     def getNext(self):
         """Update counter and return the next filename"""

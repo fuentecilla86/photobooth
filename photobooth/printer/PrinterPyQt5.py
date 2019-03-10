@@ -18,9 +18,13 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import os
 
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtPrintSupport import QPrinter
+
+from PIL import Image
+from PIL.ImageQt import ImageQt
 
 from . import Printer
 
@@ -47,20 +51,37 @@ class PrinterPyQt5(Printer):
 
     def print(self, picture):
 
-        if self._print_pdf:
-            self._printer.setOutputFileName('print_%d.pdf' % self._counter)
-            self._counter += 1
+        print("Aqui es donde puedo hacer la ñapa")
 
-        logging.info('Printing picture')
+        # path = os.path.join(config.get('Storage', 'basedir'),
+        #                     config.get('Storage', 'basename') + '_shot_')
+        from photobooth.worker.PictureList import PictureList
+        basePath = "/home/afuentes/personal/repos/photobooth/fotos/photobooth_shot_"
 
-        picture = picture.scaled(self._printer.paperRect().size(),
-                                 QtCore.Qt.KeepAspectRatio,
-                                 QtCore.Qt.SmoothTransformation)
+        pictureList = PictureList(basePath)
+        numberOfPictures = 4
+        picturesFilenames = pictureList.getNLast(numberOfPictures)
 
-        printable_size = self._printer.pageRect(QPrinter.DevicePixel)
-        origin = ((printable_size.width() - picture.width()) // 2,
-                  (printable_size.height() - picture.height()) // 2)
+        for pictureFilename in picturesFilenames:
+            
+            im = Image.open(pictureFilename)
+            picture = ImageQt(im)
+            
 
-        painter = QtGui.QPainter(self._printer)
-        painter.drawImage(QtCore.QPoint(*origin), picture)
-        painter.end()
+            if self._print_pdf:
+                self._printer.setOutputFileName('print_%d.pdf' % self._counter)
+                self._counter += 1
+
+            logging.info('1111111111111111111')
+
+            picture = picture.scaled(self._printer.paperRect().size(),
+                                     QtCore.Qt.KeepAspectRatio,
+                                     QtCore.Qt.SmoothTransformation)
+
+            printable_size = self._printer.pageRect(QPrinter.DevicePixel)
+            origin = ((printable_size.width() - picture.width()) // 2,
+                      (printable_size.height() - picture.height()) // 2)
+
+            painter = QtGui.QPainter(self._printer)
+            painter.drawImage(QtCore.QPoint(*origin), picture)
+            painter.end()

@@ -109,4 +109,5 @@ class PrintPostprocess(PostprocessTask):
 
     def get(self, picture):
 
+        print("antes de imprimir")
         return PostprocessItem('Print', lambda: self._printer.print(picture))
