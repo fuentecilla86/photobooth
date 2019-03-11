@@ -28,6 +28,9 @@ from PIL.ImageQt import ImageQt
 
 from . import Printer
 
+from photobooth.worker.PictureList import PictureList
+from photobooth.Config import Config
+
 
 class PrinterPyQt5(Printer):
 
@@ -51,37 +54,48 @@ class PrinterPyQt5(Printer):
 
     def print(self, picture):
 
-        print("Aqui es donde puedo hacer la ñapa")
+        # Loading config
+        config = Config('photobooth.cfg')
 
-        # path = os.path.join(config.get('Storage', 'basedir'),
-        #                     config.get('Storage', 'basename') + '_shot_')
-        from photobooth.worker.PictureList import PictureList
-        basePath = "/home/afuentes/personal/repos/photobooth/fotos/photobooth_shot_"
+        if config.get('Printer', 'thermal_printer') == 'True':
+            logging.info("Thermal printer enabled")
 
-        pictureList = PictureList(basePath)
-        numberOfPictures = 4
-        picturesFilenames = pictureList.getNLast(numberOfPictures)
+            basePath = os.path.join(
+                config.get('Storage', 'basedir'),
+                config.get('Storage', 'basename') + '_shot_')
 
-        for pictureFilename in picturesFilenames:
-            
-            im = Image.open(pictureFilename)
-            picture = ImageQt(im)
-            
+            pictureList = PictureList(basePath)
+            cfg_num_x = int(config.get('Picture', 'num_x'))
+            cfg_num_y = int(config.get('Picture', 'num_y'))
+            numberOfPictures = cfg_num_x * cfg_num_y
+            logging.info("Printing last {} pictures".format(numberOfPictures))
+            picturesFilenames = pictureList.getNLast(numberOfPictures)
 
-            if self._print_pdf:
-                self._printer.setOutputFileName('print_%d.pdf' % self._counter)
-                self._counter += 1
+            for pictureFilename in picturesFilenames:
 
-            logging.info('1111111111111111111')
+                logging.info("Sending to printer: {}".format(pictureFilename))
+                im = Image.open(pictureFilename)
+                picture = ImageQt(im)
+                self._sendToPrinter(picture)
+        else:
+            logging.info("Thermal printer disabled")
+            self._sendToPrinter(picture)
 
-            picture = picture.scaled(self._printer.paperRect().size(),
-                                     QtCore.Qt.KeepAspectRatio,
-                                     QtCore.Qt.SmoothTransformation)
+    def _sendToPrinter(self, picture):
 
-            printable_size = self._printer.pageRect(QPrinter.DevicePixel)
-            origin = ((printable_size.width() - picture.width()) // 2,
-                      (printable_size.height() - picture.height()) // 2)
+        if self._print_pdf:
+            self._printer.setOutputFileName('print_%d.pdf' % self._counter)
+            self._counter += 1
 
-            painter = QtGui.QPainter(self._printer)
-            painter.drawImage(QtCore.QPoint(*origin), picture)
-            painter.end()
+        picture = picture.scaled(self._printer.paperRect().size(),
+                                 QtCore.Qt.KeepAspectRatio,
+                                 QtCore.Qt.SmoothTransformation)
+
+        printable_size = self._printer.pageRect(QPrinter.DevicePixel)
+        origin = ((printable_size.width() - picture.width()) // 2,
+                  (printable_size.height() - picture.height()) // 2)
+
+        painter = QtGui.QPainter(self._printer)
+        painter.drawImage(QtCore.QPoint(*origin), picture)
+        painter.end()
+
