@@ -839,10 +839,40 @@ class Settings(QtWidgets.QFrame):
             self._cfg.getBool('Printer', 'thermal_printer'))
         self.add('Printer', 'thermal_printer', thermal_printer)
 
+        tphi = QtWidgets.QLineEdit(self._cfg.get('Printer', 'thermal_printer_head_image'))
+        self.add('Printer', 'thermal_printer_head_image', tphi)
+        
+        def file_dialog():
+            dialog = QtWidgets.QFileDialog.getOpenFileName
+            tphi.setText(dialog(self, _('Select file'), os.path.expanduser('~'),
+                              'Images (*.jpg *.png)')[0])
+
+        file_button = QtWidgets.QPushButton(_('Select file'))
+        file_button.clicked.connect(file_dialog)
+
+        tpfi = QtWidgets.QLineEdit(self._cfg.get('Printer', 'thermal_printer_foot_image'))
+        self.add('Printer', 'thermal_printer_foot_image', tpfi)
+
+        def file_dialog_foot():
+            dialog_foot = QtWidgets.QFileDialog.getOpenFileName
+            tpfi.setText(dialog_foot(self, _('Select file'), os.path.expanduser('~'),
+                              'Images (*.jpg *.png)')[0])
+
+        file_button_foot = QtWidgets.QPushButton(_('Select file'))
+        file_button_foot.clicked.connect(file_dialog_foot)
+
         lay_size = QtWidgets.QHBoxLayout()
         lay_size.addWidget(width)
         lay_size.addWidget(QtWidgets.QLabel('x'))
         lay_size.addWidget(height)
+
+        lay_file = QtWidgets.QHBoxLayout()
+        lay_file.addWidget(tphi)
+        lay_file.addWidget(file_button)
+        
+        lay_file_foot = QtWidgets.QHBoxLayout()
+        lay_file_foot.addWidget(tpfi)
+        lay_file_foot.addWidget(file_button_foot)
 
         layout = QtWidgets.QFormLayout()
         layout.addRow(('Enable printing:'), enable)
@@ -851,6 +881,8 @@ class Settings(QtWidgets.QFrame):
         layout.addRow(('Ask for confirmation before printing:'), confirmation)
         layout.addRow(('Paper size [mm]:'), lay_size)
         layout.addRow(('Thermal printer:'), thermal_printer)
+        layout.addRow(_('Thermal printer head image:'), lay_file)
+        layout.addRow(_('Thermal printer foot image:'), lay_file_foot)
 
         widget = QtWidgets.QWidget()
         widget.setLayout(layout)
@@ -937,6 +969,10 @@ class Settings(QtWidgets.QFrame):
                       self.get('Printer', 'height').text())
         self._cfg.set('Printer', 'thermal_printer',
                       str(self.get('Printer', 'thermal_printer').isChecked()))
+        self._cfg.set('Printer', 'thermal_printer_head_image',
+                      self.get('Printer', 'thermal_printer_head_image').text())
+        self._cfg.set('Printer', 'thermal_printer_foot_image',
+                      self.get('Printer', 'thermal_printer_foot_image').text())
         self._cfg.write()
         self._restartAction()
 

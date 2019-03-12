@@ -65,18 +65,29 @@ class PrinterPyQt5(Printer):
                 config.get('Storage', 'basename') + '_shot_')
 
             pictureList = PictureList(basePath)
-            cfg_num_x = int(config.get('Picture', 'num_x'))
-            cfg_num_y = int(config.get('Picture', 'num_y'))
-            numberOfPictures = cfg_num_x * cfg_num_y
-            logging.info("Printing last {} pictures".format(numberOfPictures))
+            cfgNumX = int(config.get('Picture', 'num_x'))
+            cfgNumY = int(config.get('Picture', 'num_y'))
+            numberOfPictures = cfgNumX * cfgNumY
             picturesFilenames = pictureList.getNLast(numberOfPictures)
 
-            for pictureFilename in picturesFilenames:
+            if config.get('Printer', 'thermal_printer_head_image'):
+                headImg = Image.open(config.get('Printer', 'thermal_printer_head_image'))
+                headImage = ImageQt(headImg)
+                logging.info("Printing head thermal image")
+                self._sendToPrinter(headImage)
 
+            logging.info("Printing last {} pictures".format(numberOfPictures))
+            for pictureFilename in picturesFilenames:
                 logging.info("Sending to printer: {}".format(pictureFilename))
                 im = Image.open(pictureFilename)
                 picture = ImageQt(im)
                 self._sendToPrinter(picture)
+
+            if config.get('Printer', 'thermal_printer_foot_image'):
+                footImg = Image.open(config.get('Printer', 'thermal_printer_foot_image'))
+                footImage = ImageQt(footImg)
+                logging.info("Printing foot thermal image")
+                self._sendToPrinter(footImage)
         else:
             logging.info("Thermal printer disabled")
             self._sendToPrinter(picture)

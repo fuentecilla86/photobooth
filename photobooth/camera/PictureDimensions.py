@@ -47,36 +47,20 @@ class PictureDimensions:
                                self.minDistance[i]) /
                               (self.numPictures[i] * self.captureSize[i]))
                              for i in range(2)))
-        
-
-        logging.info("Resize factor: {}".format(resize_factor))
-        
-        logging.info("outputSize: {},{}, ".format(self.outputSize[0], self.outputSize[1]))
-        logging.info("numPictures: {},{}, ".format(self.numPictures[0]+1, self.numPictures[1]+1))
-        logging.info("minDistance: {},{}, ".format(self.minDistance[0], self.minDistance[1]))
-        logging.info("captureSize: {}, {} ".format(self.captureSize[0], self.captureSize[1]))
 
         self._thumb_size = tuple(int(self.captureSize[i] * resize_factor)
                                  for i in range(2))
-        
-        # self._thumb_size = (3456, 2304)
-        
-        logging.info("Thumb_size: {}".format(self._thumb_size))
 
         thumb_dist = tuple((self.outputSize[i] - self.numPictures[i] *
                             self.thumbnailSize[i]) // (self.numPictures[i] + 1)
                            for i in range(2))
-        
-        logging.info("Thumb dist: {}".format(thumb_dist))
-        
+
         self._thumb_offsets = []
         for i in range(self.totalNumPictures):
             pos = (i % self.numPictures[0], i // self.numPictures[0])
             self._thumb_offsets.append(tuple((pos[j] + 1) * thumb_dist[j] +
                                              pos[j] * self.thumbnailSize[j]
                                              for j in range(2)))
-        # self._thumb_offsets = [(20, 29)]
-        logging.info("Thumb offsets: {}".format(self._thumb_offsets))
 
     def computePreviewDimensions(self, config):
 

@@ -52,9 +52,6 @@ class PictureList:
         """
         # Find existing files
         count_pattern = '[0-9]' * self.count_width
-        print("************")
-        print(self.basename + count_pattern + self.suffix)
-        print("************")
         pictures = glob(self.basename + count_pattern + self.suffix)
 
         # Get number of latest file
