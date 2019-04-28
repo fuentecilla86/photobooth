@@ -10,7 +10,6 @@ QWidget {
 QMainWindow {
     background: #ffffff qlineargradient(x1:0 y1:1, x2:1, y2:0, stop:0 rgba(255,165,150,255), stop:1 rgba(0,228,255,112));
     color: #eeeeee;
-    font-size: 25px;
 }
 
 /* General controls */
@@ -32,13 +31,12 @@ QPushButton:pressed {
 
 QFrame#IdleMessage {
     /*background-image: url(photobooth/gui/Qt5Gui/images/arrow.png);
-    background-repeat: no-repeat;
-    padding: 80px 400px 120px 80px;*/
-    padding: 50px 80px 80px 80px;
+    background-repeat: no-repeat;*/
+    padding: 80px 400px 120px 80px;
 }
 
 QFrame#IdleMessage QLabel {
-    font-size: 100px;
+    font-size: 160px;
     qproperty-alignment: AlignCenter;
 }
 
@@ -61,8 +59,7 @@ QFrame#GreeterMessage {
 }
 
 QFrame#GreeterMessage QLabel#title {
-    /*font-size: 180px;*/
-    font-size: 60px;
+    font-size: 180px;
     margin: 0;
     padding: 0;
     qproperty-alignment: AlignCenter;
@@ -70,8 +67,7 @@ QFrame#GreeterMessage QLabel#title {
 
 QFrame#GreeterMessage QPushButton#button {
     border: none;
-    /*font-size: 120px;*/
-    font-size: 100px;
+    font-size: 120px;
     margin: 0;
     min-height: 160px;
     padding: 0;
@@ -79,11 +75,9 @@ QFrame#GreeterMessage QPushButton#button {
 }
 
 QFrame#GreeterMessage QLabel#message {
-    /*font-size: 120px;*/
-    font-size: 80px;
+    font-size: 120px;
     margin: 0;
-    /*padding: 0;*/
-    padding: 80px 80px 160px 80px;
+    padding: 0;
     qproperty-alignment: AlignCenter;
 }
 
@@ -104,26 +98,22 @@ QFrame#CountdownMessage {
 QFrame#PoseMessage {
     background-image: url(photobooth/gui/Qt5Gui/images/camera.png);
     background-repeat: no-repeat;
-    /*padding: 380px 80px 80px 80px;*/
-    padding: 340px 80px 80px 80px;
+    padding: 380px 80px 80px 80px;
 }
 
 QFrame#PoseMessage QLabel {
-    /*font-size: 120px;*/
-    font-size: 80px;
+    font-size: 120px;
     qproperty-alignment: AlignCenter;
 }
 
 /* Wait Screen */
 
 QFrame#WaitMessage {
-    /*padding: 350px 80px 80px 80px;*/
-    padding: 300px 80px 80px 80px;
+    padding: 350px 80px 80px 80px;
 }
 
 QFrame#WaitMessage QLabel {
-    /*font-size: 110px;*/
-    font-size: 80px;
+    font-size: 110px;
     qproperty-alignment: AlignCenter;
 }
 
@@ -180,7 +170,6 @@ QTabWidget::pane {
     color: #333333;
     padding: 10px;
     margin: 0; 
-    font-size: 20px;
 }
 
 QTabWidget::tab-bar {
@@ -209,13 +198,11 @@ QGroupBox {
     border-color: #eeeeee;
     margin: 0px;
     padding: 4px;
-    font-size: 20px;
 }
 
 QTabWidget QWidget {
     color: #333333;
-    /*font-size: 30px;*/
-    font-size: 20px;
+    font-size: 30px;
 }
 
 QCheckBox::indicator {
